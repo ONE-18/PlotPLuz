@@ -101,8 +101,9 @@ def guardar_respuesta(data):
     if not os.path.exists("historico"):
         os.makedirs("historico")
     nombre_archivo = f"historico/respuesta_{date.today()}.json"
-    with open(nombre_archivo, "w") as file:
-        file.write(data)
+    if not os.path.exists(nombre_archivo):
+        with open(nombre_archivo, "w") as file:
+            file.write(data)
 
 def main():
     url = 'https://api.preciodelaluz.org/v1/prices/all?zone=PCB'
