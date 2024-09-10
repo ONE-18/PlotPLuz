@@ -1,9 +1,12 @@
 import requests
 import plotext as plt
+from datetime import date
+import os
 
 def obtener_precios_luz(url):
     response = requests.get(url)
     if response.status_code == 200:
+        guardar_respuesta(response.text)
         return response.json()
     else:
         print("Error al obtener los datos _ luz")
@@ -94,6 +97,12 @@ def imprimir_tramos_continuos(tipo, horas, precios_cheap, unit):
         precio_max = max(precios_tramo)
         print(f"{hora_prim} - {hora_ulti}: {precio_min} - {precio_max} {unit}")
 
+def guardar_respuesta(data):
+    if not os.path.exists("historico"):
+        os.makedirs("historico")
+    nombre_archivo = f"historico/respuesta_{date.today()}.json"
+    with open(nombre_archivo, "w") as file:
+        file.write(data)
 
 def main():
     url = 'https://api.preciodelaluz.org/v1/prices/all?zone=PCB'
