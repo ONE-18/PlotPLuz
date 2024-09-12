@@ -1,6 +1,6 @@
 import requests
 import plotext as plt
-from datetime import date
+from datetime import date, datetime
 import os
 
 def obtener_precios_luz(url):
@@ -57,16 +57,17 @@ def procesar_datos(data):
 
     return horas, precios, cheap, under_avg, date, units, precios_undr, precios_over, precios_cheap
 
-def mostrar_grafico(horas, precios, date, unit, cheap, under_avg, precios_undr, precios_over, precios_cheap):
+def mostrar_grafico(horas, precios, dates, unit, cheap, under_avg, precios_undr, precios_over, precios_cheap):
     media = sum(precios) / len(precios)
     """Función para crear y mostrar el gráfico en la terminal usando plotext."""
     # plt.clear_terminal() # Limpiamos cualquier gráfico anterior
     plt.stacked_bar(horas, [precios_undr, precios_over, precios_cheap], color=['orange', 'red', 'green'], fill=True, width = 3/5, label=['Baratos', 'Caros', 'Más baratos'])
-    plt.title('Precios de la luz por hora - ' + date)
+    plt.title('Precios de la luz por hora - ' + dates)
     plt.xlabel('Hora')
     plt.ylabel('Precio (' + unit + ')')
     plt.grid(True)      # plt.theme('matrix')
     plt.theme('pro')
+    plt.vertical_line(datetime.now().hour+1, 190)
     plt.horizontal_line(media, "blue")
     plt.show()
 
@@ -115,6 +116,7 @@ def main():
         imprimir_tramos_continuos("baratos", horas, precios_undr, unit)
         imprimir_tramos_continuos("caros", horas, precios_over, unit)
         print(f"\nPrecio medio:\n{round(sum(precios) / len(precios),2)} {unit}")
+        print(f"\nPrecio actual:\n{precios[datetime.now().hour]} {unit}")
 
 if __name__ == "__main__":
     main()
